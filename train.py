@@ -23,6 +23,10 @@ from summary import model_summary
 parser = argparse.ArgumentParser(description='PyTorch AGNet Training')
 parser.add_argument('--lr', default=1e-3, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
+parser.add_argument('--train_data', default='./data/trainingset/train-faces/', type=str, help='training data path')
+parser.add_argument('--train_list_file', default='./data/trainingset/new_4people_train_standard.txt', type=str, help='training annotation file')
+parser.add_argument('--test_data', default='./data/validationset/val-faces/', type=str, help='testing data path')
+parser.add_argument('--test_list_file', default='./data/validationset/new_4people_val_standard.txt', type=str, help='testing annotation file')
 args = parser.parse_args()
 
 assert torch.cuda.is_available(), 'Error: CUDA not found!'
@@ -53,9 +57,9 @@ transform_test = transforms.Compose([
     transforms.Normalize((0.485,0.456,0.406), (0.229,0.224,0.225))
 ])
 
-trainset = ListDataset(root='./data/trainingset/train-faces/', list_file='./data/trainingset/new_4people_train_standard.txt', transform=transform_train)
+trainset = ListDataset(root=args.train_data, list_file=args.train_list_file, transform=transform_train)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size, shuffle=True, num_workers=12)
-testset = ListDataset(root='./data/validationset/val-faces/', list_file='./data/validationset/new_4people_val_standard.txt', transform=transform_test)
+testset = ListDataset(root=args.test_data, list_file=args.test_list_file, transform=transform_test)
 testloader = torch.utils.data.DataLoader(testset, batch_size, shuffle=False, num_workers=12)
 
 # Model

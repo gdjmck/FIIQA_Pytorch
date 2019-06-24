@@ -7,6 +7,30 @@ import torch
 import torch.utils.data as data
 import torchvision.transforms as transforms
 from PIL import Image
+import dlib
+import numpy as np
+from skimage.morphology import convex_hull_image
+
+detector = dlib.get_frontal_face_detector()
+kpt_predictor = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
+
+def boundingRect(img):
+    h, w = img.shape[:2]
+    for x0 in range(w):
+        if np.count_nonzero(img[:, x0, ...]) > 0:
+            break
+    for x1 in range(w-1, -1, -1):
+        if np.count_nonzero(img[:, x1, ...]) > 0:
+            break
+    for y0 in range(h):
+        if np.count_nonzero(img[y0, ...]) > 0:
+            break
+    for y1 in range(h-1, -1, -1):
+        if np.count_nonzero(img[y1, ...]) > 0:
+            break
+    #print('x: %d: %d\ny: %d: %d'%(x0, x1, y0, y1))
+    assert x0 <= x1 and y0 <= y1
+    return x0, x1, y0, y1
 
 class ListDataset(data.Dataset):
     def __init__(self, root, list_file, transform):
@@ -46,6 +70,15 @@ class ListDataset(data.Dataset):
         fiiqa = self.fiiqa[idx]
 
         img = Image.open(os.path.join(self.root, fname)).convert('RGB')
+        faces = detector(img[..., ::-1], 1)
+        kpt = kpt_predictor(img[..., ::-1], faces[0])
+        kpt_mask = np.zeros_like(face[..., 0], dtype=np.bool)
+        for i in range(68):
+          kpt_mask[kpt.part(i).y, kpt.part(i).x] = 1
+        chull = convex_hull_image(kpt_mask)
+        x0, x1, y0, y1 = boundingRect(chull)
+        img *= chull
+        img = img[y0: y1, x0: x1, ...]
         img = self.transform(img)
         return img, fiiqa
 
