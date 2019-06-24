@@ -13,15 +13,17 @@ import torch.nn.functional as F
 from shufflenetv2 import ShuffleNetV2
 import scipy.io as scio
 import cv2
+import glob
 
 #config
 matFile = 'pScores.mat'
 fiiqaWeight = './model/97_160_2.pth'
 detectFace = './model/haarcascade_frontalface_default.xml'
 imagePath = './image/test.jpg'
-facePath = './image/crop/test_face.jpg'
+facePath = glob.glob('./image/crop/*.jpg')
 inputSize = 160
 
+'''
 #crop face from img
 faceCascade = cv2.CascadeClassifier(detectFace)
 image = cv2.imread(imagePath)
@@ -34,6 +36,7 @@ faces = faceCascade.detectMultiScale(
 for (x, y, w, h) in faces:
     cv2.imwrite('./image/crop/' + 'test_face.jpg',image[y:y+h,x:x+w])
 cv2.waitKey(0)
+'''
 
 #transfer img to tensor
 dataTransforms =  transforms.Compose([
@@ -49,18 +52,19 @@ net.load_state_dict(checkpoint['net'])
 net.eval()
 
 #load face and get expect num
-face = Image.open(facePath)
-imgblob = dataTransforms(face).unsqueeze(0)
-imgblob = Variable(imgblob)
-torch.no_grad()
-predict = F.softmax(net(imgblob),dim=1)
-expect = torch.sum(Variable(torch.arange(0,200)).float()*predict, 1)
-expect = int(expect)
+for faceFile in facePath:
+    face = Image.open(faceFile)
+    imgblob = dataTransforms(face).unsqueeze(0)
+    imgblob = Variable(imgblob)
+    torch.no_grad()
+    predict = F.softmax(net(imgblob),dim=1)
+    expect = torch.sum(Variable(torch.arange(0,200)).float()*predict, 1)
+    expect = int(expect)
 
-#load matFile and get score
-data = scio.loadmat(matFile)
-scores = data['pScores']
-score = scores[:,expect]
+    #load matFile and get score
+    data = scio.loadmat(matFile)
+    scores = data['pScores']
+    score = scores[:,expect]
 
-print('expect: %d' % expect)
-print('score: %.3f' %  score)
+    print('expect: %d' % expect)
+    print('score: %.3f' %  score)
