@@ -59,7 +59,7 @@ testset = ListDataset(root='./data/validationset/val-faces/', list_file='./data/
 testloader = torch.utils.data.DataLoader(testset, batch_size, shuffle=False, num_workers=12)
 
 # Model
-net = ShuffleNetV2(input_size)
+net = ShuffleNetV2(input_size=input_size)
 '''
 model_summary(net,input_size=(3,input_size,input_size))
 flops, params = get_model_complexity_info(net, (input_size, input_size), as_strings=True, print_per_layer_stat=False)
@@ -78,7 +78,7 @@ net.cuda()
 
 criterion = FIIQALoss()
 #criterion = nn.CrossEntropyLoss()
-optimizer = optim.AdaBound(net.parameters(),lr=args.lr,final_lr=0.1)
+optimizer = AdaBound(net.parameters(),lr=args.lr,final_lr=0.1)
 
 #optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=1e-4)
 

@@ -22,7 +22,7 @@ fiiqaWeight = './model/97_160_2.pth'
 detectFace = './model/haarcascade_frontalface_default.xml'
 imagePath = './image/test.jpg'
 facePath = glob.glob('./image/crop/*.jpg')
-inputSize = 200
+inputSize = 160
 
 '''
 #crop face from img
@@ -47,7 +47,7 @@ dataTransforms =  transforms.Compose([
 ])
 
 #load net 
-net = ShuffleNetV2(inputSize)
+net = ShuffleNetV2(input_size=inputSize)
 checkpoint = torch.load(fiiqaWeight)
 net.load_state_dict(checkpoint['net'])
 net.eval()
