@@ -14,6 +14,7 @@ from shufflenetv2 import ShuffleNetV2
 import scipy.io as scio
 import cv2
 import glob
+import shutil
 
 #config
 matFile = 'pScores.mat'
@@ -66,5 +67,7 @@ for faceFile in facePath:
     scores = data['pScores']
     score = scores[:,expect]
 
-    print('expect: %d' % expect)
-    print('score: %.3f' %  score)
+    print('Image:', faceFile)
+    print('\texpect: %d' % expect)
+    print('\tscore: %.3f' %  score)
+    shutil.move(faceFile, faceFile.replace('.jpg', '_%d.jpg'%expect))
