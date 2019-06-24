@@ -62,6 +62,9 @@ for faceFile in facePath:
     torch.no_grad()
     predict = F.softmax(net(imgblob),dim=1)
     expect = torch.sum(Variable(torch.arange(0,200)).float()*predict, 1)
+    if expect.shape[0] > 1:
+        print('irregular file.')
+        continue
     expect = int(expect)
 
     #load matFile and get score
