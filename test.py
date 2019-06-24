@@ -70,4 +70,4 @@ for faceFile in facePath:
     print('Image:', faceFile)
     print('\texpect: %d' % expect)
     print('\tscore: %.3f' %  score)
-    shutil.move(faceFile, faceFile.replace('.jpg', '_%d.jpg'%expect))
+    shutil.copy(faceFile, faceFile.replace('crop', 'result').replace('.jpg', '_%d.jpg'%expect))
