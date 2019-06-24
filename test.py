@@ -56,7 +56,7 @@ net.eval()
 #load face and get expect num
 for faceFile in facePath:
     print('Image:', faceFile)
-    face = Image.open(faceFile)
+    face = Image.open(faceFile).convert('RGB')
     face = convexFace(face[..., ::-1])[..., ::-1]
     imgblob = dataTransforms(face).unsqueeze(0)
     imgblob = Variable(imgblob)
