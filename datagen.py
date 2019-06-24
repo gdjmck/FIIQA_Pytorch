@@ -80,8 +80,8 @@ class ListDataset(data.Dataset):
         fiiqa = self.fiiqa[idx]
 
         img = Image.open(os.path.join(self.root, fname)).convert('RGB')
-        img = convexFace(img[..., ::-1])[..., ::-1]
-        img = self.transform(img)
+        img = convexFace(np.array(img)[..., ::-1])[..., ::-1]
+        img = self.transform(Image.fromarray(img))
         return img, fiiqa
 
     def __len__(self):

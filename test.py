@@ -57,8 +57,8 @@ net.eval()
 for faceFile in facePath:
     print('Image:', faceFile)
     face = Image.open(faceFile).convert('RGB')
-    face = convexFace(face[..., ::-1])[..., ::-1]
-    imgblob = dataTransforms(face).unsqueeze(0)
+    face = convexFace(np.array(face)[..., ::-1])[..., ::-1]
+    imgblob = dataTransforms(Image.fromarray(face)).unsqueeze(0)
     imgblob = Variable(imgblob)
     print('\timgblob.shape:', imgblob.shape)
     torch.no_grad()
