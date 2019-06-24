@@ -54,9 +54,11 @@ net.eval()
 
 #load face and get expect num
 for faceFile in facePath:
+    print('Image:', faceFile)
     face = Image.open(faceFile)
     imgblob = dataTransforms(face).unsqueeze(0)
     imgblob = Variable(imgblob)
+    print('\timgblob.shape:', imgblob.shape)
     torch.no_grad()
     predict = F.softmax(net(imgblob),dim=1)
     expect = torch.sum(Variable(torch.arange(0,200)).float()*predict, 1)
@@ -67,7 +69,6 @@ for faceFile in facePath:
     scores = data['pScores']
     score = scores[:,expect]
 
-    print('Image:', faceFile)
     print('\texpect: %d' % expect)
     print('\tscore: %.3f' %  score)
     shutil.copy(faceFile, faceFile.replace('crop', 'result').replace('.jpg', '_%d.jpg'%expect))
