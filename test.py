@@ -21,7 +21,7 @@ fiiqaWeight = './model/97_160_2.pth'
 detectFace = './model/haarcascade_frontalface_default.xml'
 imagePath = './image/test.jpg'
 facePath = glob.glob('./image/crop/*.jpg')
-inputSize = 160
+inputSize = 200
 
 '''
 #crop face from img
