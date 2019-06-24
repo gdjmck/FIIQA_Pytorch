@@ -15,6 +15,7 @@ import scipy.io as scio
 import cv2
 import glob
 import shutil
+import numpy as np
 from datagen import convexFace
 
 #config
