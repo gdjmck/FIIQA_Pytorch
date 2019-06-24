@@ -15,6 +15,7 @@ import scipy.io as scio
 import cv2
 import glob
 import shutil
+from datagen import convexFace
 
 #config
 matFile = 'pScores.mat'
@@ -56,6 +57,7 @@ net.eval()
 for faceFile in facePath:
     print('Image:', faceFile)
     face = Image.open(faceFile)
+    face = convexFace(face[..., ::-1])[..., ::-1]
     imgblob = dataTransforms(face).unsqueeze(0)
     imgblob = Variable(imgblob)
     print('\timgblob.shape:', imgblob.shape)
