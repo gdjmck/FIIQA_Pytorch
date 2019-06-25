@@ -34,6 +34,8 @@ def boundingRect(img):
 
 def convexFace(img_bgr):
   faces = detector(img_bgr, 1)
+  if len(faces) == 0:
+    return np.zeros_like(img_bgr)
   kpt = kpt_predictor(img_bgr, faces[0])
   kpt_mask = np.zeros_like(img_bgr[..., 0], dtype=bool)
   for i in range(68):
