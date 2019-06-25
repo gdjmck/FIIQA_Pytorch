@@ -37,7 +37,8 @@ def convexFace(img_bgr):
   kpt = kpt_predictor(img_bgr, faces[0])
   kpt_mask = np.zeros_like(img_bgr[..., 0], dtype=bool)
   for i in range(68):
-    kpt_mask[kpt.part(i).y, kpt.part(i).x] = 1
+    x, y = kpt.part(i).x, kpt.part(i).y
+    kpt_mask[min(max(y, 0), kpt_mask.shape[0]-1), min(max(x, 0), kpt_mask.shape[1]-1)] = 1
   chull = convex_hull_image(kpt_mask)
   x0, x1, y0, y1 = boundingRect(chull)
   return (img_bgr*chull[..., np.newaxis])[y0: y1, x0: x1, ...]
