@@ -58,7 +58,7 @@ net.eval()
 for faceFile in facePath:
     print('Image:', faceFile)
     face = Image.open(faceFile).convert('RGB')
-    face = convexFace(np.array(face)[..., ::-1])[..., ::-1]
+    face = convexFace(np.array(face)[..., ::-1])[..., ::-1] # RGB
     imgblob = dataTransforms(Image.fromarray(face)).unsqueeze(0)
     imgblob = Variable(imgblob)
     print('\timgblob.shape:', imgblob.shape)
@@ -77,4 +77,4 @@ for faceFile in facePath:
 
     print('\texpect: %d' % expect)
     print('\tscore: %.3f' %  score)
-    shutil.copy(faceFile, faceFile.replace('crop', 'result').replace('.jpg', '_%d.jpg'%expect))
+    cv2.imwrite(faceFile.replace('crop', 'result').replace('.jpg', '_%d.jpg'%expect), face[..., ::-1])
