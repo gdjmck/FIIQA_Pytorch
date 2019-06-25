@@ -9,7 +9,7 @@ from torch.autograd import Variable
 
 class FIIQALoss(nn.Module):
     def __init__(self):
-        super(AGLoss, self).__init__()
+        super(FIIQALoss, self).__init__()
 
     def forward(self, fiiqa_preds, fiiqa_targets):
         '''Compute loss (fiiqa_preds, fiiqa_targets) .
