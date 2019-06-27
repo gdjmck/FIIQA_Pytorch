@@ -46,7 +46,7 @@ def convexFace(img_bgr):
   return (img_bgr*chull[..., np.newaxis])[y0: y1, x0: x1, ...]
 
 class ListDataset(data.Dataset):
-    def __init__(self, root, list_file, transform):
+    def __init__(self, root, list_file, transform, extract_face=False):
         '''
         Args:
           root: (str) ditectory to images.
@@ -55,6 +55,7 @@ class ListDataset(data.Dataset):
         '''
         self.root = root
         self.transform = transform
+        self.extract_face = extract_face
 
         self.fname = []
         self.fiiqa = []
@@ -83,7 +84,8 @@ class ListDataset(data.Dataset):
         fiiqa = self.fiiqa[idx]
 
         img = Image.open(os.path.join(self.root, fname)).convert('RGB')
-        img = convexFace(np.array(img)[..., ::-1])[..., ::-1]
+        if self.extract_face:
+          img = convexFace(np.array(img)[..., ::-1])[..., ::-1]
         img = self.transform(Image.fromarray(img))
         return img, fiiqa
 
