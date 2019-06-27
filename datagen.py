@@ -86,7 +86,8 @@ class ListDataset(data.Dataset):
         img = Image.open(os.path.join(self.root, fname)).convert('RGB')
         if self.extract_face:
           img = convexFace(np.array(img)[..., ::-1])[..., ::-1]
-        img = self.transform(Image.fromarray(img))
+          img = Image.fromarray(img)
+        img = self.transform(img)
         return img, fiiqa
 
     def __len__(self):
